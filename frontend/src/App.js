@@ -1,24 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+// import Hero from './Pages/hero/hero';
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+      <SignedOut>
+        <>
+        Welcome to Accident data analysis Dashboard<br/>
+        <SignInButton children={
+          <button style={{backgroundColor: 'blue', color: 'white', padding: '10px', borderRadius: '5px', cursor: 'pointer'}}>Sign in</button>
+        
+        }/>
+        </>
+      </SignedOut>
+      <SignedIn>
+        <UserButton afterSignOutUrl="/" />
+      </SignedIn>
+      </>
   );
 }
 
