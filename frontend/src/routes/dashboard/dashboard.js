@@ -9,6 +9,7 @@ export default function DashboardPage() {
       <ul>
         {/* <li><Link to="/dashboard/invoices">Invoices</Link></li> */}
         <li><Link to="/">Return to index</Link></li>
+        <li><Link to="/dashboard/form">Form</Link></li>
       </ul>
     </>
   );

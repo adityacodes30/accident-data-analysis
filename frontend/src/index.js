@@ -11,6 +11,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignUpPage from './routes/sign-up';
 import SignInPage from './routes/sign-in';
 import IndexPage from './routes/index';
+import FormPage from './routes/form/form';
 
 // const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
 
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
         path: "dashboard",
         children: [
           { path: "/dashboard", element: <Dashboard /> },
+          { path: "/dashboard/form", element: <FormPage />}
         ]
       }
     ]
