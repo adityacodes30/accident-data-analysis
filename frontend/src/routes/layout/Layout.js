@@ -182,6 +182,19 @@ function FormPage() {
   const [formError, setFormError] = useState(false);
   const { isLoaded, user } = useUser();
 
+  useEffect(() => {
+    axios.get('http://localhost:5001/formdata').then((response) => {
+        setformdata(response.data);
+        setFormValues(
+            Object.keys(response.data).filter(key => key !== "_id").reduce((obj, key) => ({ ...obj, [key]: '' }), {})
+        );
+        setloading(false);
+    }).catch((error) => {
+        console.error('Error fetching form data:', error);
+        setloading(false);
+    });
+}, []);
+
   if (!isLoaded) return null;
 
   if (!user) {
@@ -224,18 +237,7 @@ function FormPage() {
       }
   }
 
-  useEffect(() => {
-      axios.get('http://localhost:5001/formdata').then((response) => {
-          setformdata(response.data);
-          setFormValues(
-              Object.keys(response.data).filter(key => key !== "_id").reduce((obj, key) => ({ ...obj, [key]: '' }), {})
-          );
-          setloading(false);
-      }).catch((error) => {
-          console.error('Error fetching form data:', error);
-          setloading(false);
-      });
-  }, []);
+  
   
   if(loading) 
   {
