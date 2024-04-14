@@ -1,8 +1,10 @@
 import express from "express";
 import * as dotenv from "dotenv"; //
+import cors from "cors";
 dotenv.config(); //
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 import fs from "fs";
 import csv from "csv-parser";
@@ -10,35 +12,12 @@ import csv from "csv-parser";
 ///mongo connection
 
 import { MongoClient, ServerApiVersion } from "mongodb";
+import { log } from "console";
+import { kspDB } from "./db.js";
+const uri =
+  "mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-const uri ="mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
-
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    // Ensures that the client will close when you finish/error
-  }
-}
-run().catch(console.dir);
-
-const kspDB = client.db("ksp");
-const coll = kspDB.collection("data");
+// const coll = kspDB.collection("data");
 
 app.get("/", (req, res) => {
   console.log("get req");
@@ -155,80 +134,3 @@ app.get("/roadTypeCount", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
-
-var counter = 0 
-var arr = []
-fs.createReadStream("./Dataset.csv")
-    .pipe(csv())
-    .on("data", async function (data) {
-        counter++;
-        const doc = {
-          districtName: data.DISTRICTNAME,
-          unitName: data.UNITNAME,
-          year: data.Year,
-          accidentSpot: data.Accident_Spot,
-          accidentSublocation: data.Accident_SubLocation,
-          severity: data.Severity,
-          roadCharacter: data.Road_Character,
-          roadType: data.Road_Type,
-          weather: data.Weather,
-          latitude: data.Latitude,
-          longitude: data.Longitude,
-          month: data.Month,
-          age: data.age,
-          sex: data.Sex,
-          personType: data.PersonType,
-        };
-        arr.push(doc);
-        
-        coll.insertOne(doc)
-      
-    })
-    .on("end", function () {
-      console.log(arr.length)
-    });
-
-    app.get("/districtCount", async (req, res) => {
-      try {
-        const districtNames = [
-          "Bagalkot",
-          "Ballari",
-          "Belagavi City",
-          "Belagavi Dist",
-          "Bengaluru City",
-          "Bengaluru Dist"
-        ];
-        let districtCounts = {};
-        for (let district of districtNames) {
-          const count = await coll.countDocuments({ districtName: district });
-          districtCounts[district] = count;
-        }
-        res.json(districtCounts);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "An error occurred" });
-      }
-    });
-
-    app.get("/personTypeCount", async (req, res) => {
-      try {
-        const personTypes = [
-          "Deceased",
-          "Injured",
-          "Unidentified Dead Body",
-          "Unidentified Person",
-          "Complainant",
-          "Kidnapped",
-          "Arrest"
-        ];
-        let personTypeCounts = {};
-        for (let personType of personTypes) {
-          const count = await coll.countDocuments({ personType: personType });
-          personTypeCounts[personType] = count;
-        }
-        res.json(personTypeCounts);
-      } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "An error occurred" });
-      }
-    });

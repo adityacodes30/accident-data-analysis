@@ -1,13 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+// import App from './App';
 import reportWebVitals from './reportWebVitals';
+// import { ClerkProvider } from '@clerk/clerk-react';
+// import Dashboard from './routes/dashboard/dashboard';
+import DashboardLayout from './layouts/dashboard-layout';
+import RootLayout from './layouts/root-layout';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import SignUpPage from './routes/sign-up';
+import SignInPage from './routes/sign-in';
+import IndexPage from './routes/index';
+import Dashboard from './routes/layout/Layout';
+// import FormPage from './routes/form/form';
+
+// const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
+
+// if (!PUBLISHABLE_KEY) {
+//   throw new Error("Missing Publishable Key")
+// }
+const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
+    children: [
+      { path: "/", element: <IndexPage /> },
+      // { path: "/contact", element: <ContactPage /> },
+      { path: "/sign-in/*", element: <SignInPage /> },
+      { path: "/sign-up/*", element: <SignUpPage /> },
+      {
+        element: <DashboardLayout />,
+        path: "dashboard",
+        children: [
+          { path: "/dashboard", element: <Dashboard/> },
+          // { path: "/dashboard/form", element: <FormPage />}
+        ]
+      }
+    ]
+  }
+])
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    {/* <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
     <App />
+    </ClerkProvider> */}
+     <RouterProvider router={router} />
   </React.StrictMode>
 );
 
