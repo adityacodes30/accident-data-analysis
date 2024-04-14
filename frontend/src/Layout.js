@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaHome, FaFileAlt, FaMap, FaComments, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
-import './App.css'; // Assuming you have a CSS file for styling
+import './Layout.css'; // Assuming you have a CSS file for styling
+import { ResponsiveContainer, AreaChart, PieChart, BarChart, Area, Pie, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
 function App() {
   const [selectedNavItem, setSelectedNavItem] = useState("Dashboard");
@@ -24,12 +25,11 @@ function App() {
             </ul>
           </nav>
         </div>
-        <div className="sub-container">
-          <YearList />
-        </div>
-        <div className="sub-container big">
-          <IframeDisplay/>
-        </div>
+        
+          {/* <YearList /> */}
+        
+          {/* <IframeDisplay/> */}
+          <GraphDisplay/>
       </div>
     </div>
   );
@@ -38,6 +38,7 @@ function YearList() {
   const years = [2020, 2021, 2022, 2023, 2024]; // Sample list of years
   const [selectedYear, setSelectedYear] = useState(2022);
   return (
+    <div className="sub-container">
     <div className='year-list-container'>
     <div className="year-list">
       {years.map((year) => (
@@ -49,17 +50,98 @@ function YearList() {
             {year}</div>
         </div>
       ))}
-      </div></div>
+        </div></div></div>
   );
 }
 function IframeDisplay() {
   return (
+    <div className="sub-container big">
     <div className="iframe-container">
       <iframe src="./2023.html" className='iframe-d' title="HTML File Display"></iframe>
-    </div>
+      </div></div>
   );
 }
 
 // export default YearList;
+// import React from "react";
+function GraphDisplay() {
+  // Sample data for demonstration
+  const data = [
+    { name: "Category 1", value: 400 },
+    { name: "Category 2", value: 300 },
+    { name: "Category 3", value: 300 },
+    { name: "Category 4", value: 200 },
+    { name: "Category 5", value: 100 }
+  ];
+
+  return (
+    <div className="sub-container bbig graph-display">
+      <div className="graph-container">
+        <h3>Area Chart</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={data}>
+              <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+            </AreaChart>
+          </ResponsiveContainer>
+      </div>
+      <div className="graph-container pie">
+        <h3>Pie Chart</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        
+      </div>
+      <div className="graph-container pie">
+        <h3>Pie Chart</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+
+      </div>
+      <div className="graph-container pie">
+        <h3>Pie Chart</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+
+      </div>
+      <div className="graph-container pie">
+        <h3>Pie Chart</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+
+      </div>
+      <div className="graph-container histo">
+        <h3>Bar Chart</h3>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={data}>
+              <Bar dataKey="value" fill="#8884d8" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+            </BarChart>
+          </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+// export default GraphDisplay;
 
 export default App;
