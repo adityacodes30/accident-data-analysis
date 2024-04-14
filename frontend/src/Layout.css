@@ -1,0 +1,103 @@
+.app {
+  background-color: lightgrey;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.centered-container {
+  width: 75%;
+  height: 75%;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sub-container {
+  width: calc(20% - 10px);
+  /* 20px for left and right margins */
+  height: calc(100% - 10px);
+  /* 20px for top and bottom margins */
+  background-color: lightgrey;
+  margin: 5px;
+  border-radius: 5px;
+}
+
+.sub-container.no-bg {
+  background-color: transparent;
+}
+
+.sub-container.big {
+  width: calc(60% - 10px);
+  /* 20px for left and right margins */
+}
+/* App.css */
+/* App.css */
+.nav-menu {
+  list-style-type: none;
+  padding: 0;
+}
+
+.nav-menu li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.nav-menu li span {
+  margin-left: 10px;
+  transition: color 0.3s;
+  /* Add transition for smoother color change */
+}
+.nav-menu .selected span,
+.nav-menu .selected svg {
+  /* Apply green color to both span and svg for selected item */
+  color: green;
+}
+
+.nav-menu li:hover span,
+.nav-menu li:hover svg {
+  /* Apply hover effect to both span and svg */
+  color: grey;
+  /* Change text color to green on hover */
+}
+/* App.css */
+.year-list {
+  padding: 5px;
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+}
+
+.year {
+  background-color: white;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.year.selected {
+  background-color: grey;
+  color: white;
+}
+.year-margin{
+  margin: 10px;
+}
+.year-list-container {
+  height: 100%;
+  /* Set a fixed height */
+  overflow-y: auto;
+  /* Enable vertical scrolling */
+}
+.iframe-container{
+  height: 100%;
+  width: 100%;
+}
+.iframe-d{
+  height: 100%;
+    width: 100%;
+}
