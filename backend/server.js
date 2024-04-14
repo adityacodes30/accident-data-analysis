@@ -10,9 +10,8 @@ import csv from "csv-parser";
 ///mongo connection
 
 import { MongoClient, ServerApiVersion } from "mongodb";
-import { log } from "console";
-const uri =
-  "mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+const uri ="mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -56,20 +55,110 @@ app.post("/login", (req, res) => {
   var password = data.password;
   var locationPinCode = data.locationPinCode;
 
-  // to add database implementation here
-
   try {
   } catch {}
 });
 
 app.get("/dataDashboard", (req, res) => {});
 
-var arr = [];
+app.get("/count", async (req, res) => {
+  try {
+    const maleCount = await coll.countDocuments({ sex: "MALE" });
+    const femaleCount = await coll.countDocuments({ sex: "FEMALE" });
+    res.json({ maleCount, femaleCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
 
-var counter = 0;
+app.get("/ageRangeCount", async (req, res) => {
+  try {
+    const range1Count = await coll.countDocuments({ age: { $gte: 18, $lt: 30 } });
+    const range2Count = await coll.countDocuments({ age: { $gte: 30, $lt: 45 } });
+    const range3Count = await coll.countDocuments({ age: { $gte: 45, $lt: 60 } });
+    res.json({ range1Count, range2Count, range3Count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+export default app;
 
+app.get("/accidentSpotCount", async (req, res) => {
+  try {
+    const spotTypes = [
+      "Curves",
+      "Other",
+      "Narrow road",
+      "Cross roads",
+      "Y Junction",
+      "T Junction",
+      "Circle",
+      "Junction",
+      "Culvert",
+      "Offset",
+      "Bridge",
+      "Road hump or Rumble strips",
+      "Bottleneck",
+      "Round about or Circle",
+      "More than four arms",
+      "Railway crossing",
+      "Rail Crossing manned",
+      "Staggered junction",
+      "Rail Crossing Unmanned",
+      "Straight and flat"
+    ];
 
-  fs.createReadStream("./Dataset.csv")
+    let spotCounts = {};
+
+    for (let spot of spotTypes) {
+      const count = await coll.countDocuments({ accidentSpot: spot });
+      spotCounts[spot] = count;
+    }
+
+    res.json(spotCounts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
+app.get("/roadTypeCount", async (req, res) => {
+  try {
+    const roadTypes = [
+      "State Highway",
+      "NH",
+      "Arterial",
+      "Major District Road",
+      "Minor District Road",
+      "Two way",
+      "Service Road",
+      "Residential Street",
+      "City or Town Road",
+      "Village Road",
+      "One way",
+      "Sub Arterial",
+      "Feeder Road",
+      "Mixed",
+      "Expressway",
+      "Forest Road"
+    ];
+    let roadCounts = {};
+    for (let road of roadTypes) {
+      const count = await coll.countDocuments({ roadType: road });
+      roadCounts[road] = count;
+    }
+    res.json(roadCounts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred" });
+  }
+});
+
+var counter = 0 
+var arr = []
+fs.createReadStream("./Dataset.csv")
     .pipe(csv())
     .on("data", async function (data) {
         counter++;
@@ -99,5 +188,47 @@ var counter = 0;
       console.log(arr.length)
     });
 
+    app.get("/districtCount", async (req, res) => {
+      try {
+        const districtNames = [
+          "Bagalkot",
+          "Ballari",
+          "Belagavi City",
+          "Belagavi Dist",
+          "Bengaluru City",
+          "Bengaluru Dist"
+        ];
+        let districtCounts = {};
+        for (let district of districtNames) {
+          const count = await coll.countDocuments({ districtName: district });
+          districtCounts[district] = count;
+        }
+        res.json(districtCounts);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "An error occurred" });
+      }
+    });
 
-export default app;
+    app.get("/personTypeCount", async (req, res) => {
+      try {
+        const personTypes = [
+          "Deceased",
+          "Injured",
+          "Unidentified Dead Body",
+          "Unidentified Person",
+          "Complainant",
+          "Kidnapped",
+          "Arrest"
+        ];
+        let personTypeCounts = {};
+        for (let personType of personTypes) {
+          const count = await coll.countDocuments({ personType: personType });
+          personTypeCounts[personType] = count;
+        }
+        res.json(personTypeCounts);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "An error occurred" });
+      }
+    });
