@@ -4,14 +4,15 @@ import './index.css';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 // import { ClerkProvider } from '@clerk/clerk-react';
-import Dashboard from './routes/dashboard/dashboard';
+// import Dashboard from './routes/dashboard/dashboard';
 import DashboardLayout from './layouts/dashboard-layout';
 import RootLayout from './layouts/root-layout';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignUpPage from './routes/sign-up';
 import SignInPage from './routes/sign-in';
 import IndexPage from './routes/index';
-import FormPage from './routes/form/form';
+import Dashboard from './routes/layout/Layout';
+// import FormPage from './routes/form/form';
 
 // const PUBLISHABLE_KEY = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY
 
@@ -30,8 +31,8 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         path: "dashboard",
         children: [
-          { path: "/dashboard", element: <Dashboard /> },
-          { path: "/dashboard/form", element: <FormPage />}
+          { path: "/dashboard", element: <Dashboard/> },
+          // { path: "/dashboard/form", element: <FormPage />}
         ]
       }
     ]

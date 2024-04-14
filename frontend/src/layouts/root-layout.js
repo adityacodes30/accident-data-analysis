@@ -12,7 +12,7 @@ export default function RootLayout() {
  
   return (
     <ClerkProvider navigate={navigate} publishableKey={PUBLISHABLE_KEY}>
-      <header className="header">
+      {/* <header className="header">
         <div>
           <SignedIn>
             <UserButton afterSignOutUrl='/sign-in' />
@@ -21,7 +21,7 @@ export default function RootLayout() {
             <Link to="/sign-in">Sign In</Link>
           </SignedOut>
         </div>
-      </header>
+      </header> */}
       <main>
         <Outlet />
       </main>
