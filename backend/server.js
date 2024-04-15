@@ -6,18 +6,17 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-import fs from "fs";
-import csv from "csv-parser";
+// import fs from "fs";
+// import csv from "csv-parser";
 
 ///mongo connection
 
-import { MongoClient, ServerApiVersion } from "mongodb";
-import { log } from "console";
+// import { MongoClient, ServerApiVersion } from "mongodb";
+// import { log } from "console";
 import { kspDB } from "./db.js";
-const uri =
-  "mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+// const uri ="mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// const coll = kspDB.collection("data");
+const coll = kspDB.collection("data");
 
 app.get("/", (req, res) => {
   console.log("get req");
@@ -62,7 +61,6 @@ app.get("/ageRangeCount", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
-export default app;
 
 app.get("/accidentSpotCount", async (req, res) => {
   try {
@@ -134,3 +132,30 @@ app.get("/roadTypeCount", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
+
+app.get("/formdata", async function (req, res) {
+  console.log("on formdata route");
+  try {
+    const formdatacoll = kspDB.collection("form-data");
+    const result = await formdatacoll.find({}).toArray();
+    // console.log(result.toString());
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/form_sub", async function (req, res) {
+  console.log("on form_sub route");
+  try {
+    const formSubColl = kspDB.collection("form-sub");
+    const result = await formSubColl.insertOne(req.body);
+    res.status(200).json({ message: "Form submitted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+export default app;
