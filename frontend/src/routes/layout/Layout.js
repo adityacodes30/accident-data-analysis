@@ -205,7 +205,6 @@ function GraphDisplay() {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Legend />
           </BarChart>
         </ResponsiveContainer>
       </div>
