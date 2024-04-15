@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-
     "@clerk/clerk-react": "^4.30.10",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -16,8 +15,8 @@
     "mongodb": "^6.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3",
     "react-icons": "^5.0.1",
+    "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "recharts": "^2.12.5",
     "web-vitals": "^2.1.4"
@@ -46,5 +45,4 @@
       "last 1 safari version"
     ]
   }
-  
 }

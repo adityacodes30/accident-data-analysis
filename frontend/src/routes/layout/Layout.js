@@ -6,7 +6,7 @@ import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from '@mui/material';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import ChatBot from 'react-simple-chatbot';
 function Dashboard() {
   const [selectedNavItem, setSelectedNavItem] = useState("Dashboard");
 
@@ -26,6 +26,15 @@ function Dashboard() {
   } else if (selectedNavItem === "Logout") {
     pageContent = <LogoutLogin />;
   }
+
+   
+const steps = [
+  {
+      id: '0',
+      message: 'Hey Geek!',
+      end: true
+  }
+];
 
   return (
     <div className="app">
@@ -49,9 +58,72 @@ function Dashboard() {
         {/* <IframeDisplay/> */}
         
       </div>
+      <Chatbot />
     </div>
   );
 }
+
+// import React, { useState } from 'react';
+// import './Chatbot.css';
+
+const Chatbot = () => {
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [chatbotVisible, setChatbotVisible] = useState(false);
+
+  const handleMessageSubmit = async (e) => {
+    e.preventDefault();
+    if (inputText.trim() === '') return;
+    const newMessage = {
+      text: inputText,
+      sender: 'user',
+    };
+    setMessages([...messages, newMessage]);
+    setInputText('');
+    // Here you can add your logic for processing the user input
+    const resp = await axios.post('http://localhost:8765/query', {
+      message: inputText,
+      });
+    const botResponse = {
+      text: resp.data.result,
+      sender: 'bot',
+    };
+    setMessages([...messages, botResponse]);
+    
+  };
+  const handleChatButtonClick = () => {
+    setChatbotVisible(!chatbotVisible);
+  }
+  return (
+    <div className="chatbot-container">
+      {chatbotVisible && <div className="chatbot">
+        <div className="chatbot-messages">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              {message.text}
+            </div>
+          ))}
+        </div>
+        <form onSubmit={handleMessageSubmit} className="input-form">
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Type your message..."
+            className="input-field"
+          />
+          <button type="submit" className="send-button">
+            Send
+          </button>
+        </form>
+      </div>}
+      <div className="float-button" onClick={handleChatButtonClick}>chat</div>
+    </div>
+  );
+};
+
+
+
 function YearList() {
   const years = [2020, 2021, 2022, 2023, 2024]; // Sample list of years
   const [selectedYear, setSelectedYear] = useState(2022);
@@ -282,8 +354,8 @@ function FormPage() {
   }
   
   return (
-      <>
-          <Paper>
+      <> 
+          <Paper className='sub-container bbig'>
               <h1>Form page</h1>
               <form onSubmit={handleSubmit}>
                   <Grid container spacing={2}>
