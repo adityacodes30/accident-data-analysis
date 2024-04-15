@@ -132,6 +132,23 @@ def predict():
     district2 = re.sub(r'\W+', '_', district)
     exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
     exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
+  decoded_data, _, _, _ = get_clusters(Yadgiri_Traffic_Police_Station)
+  return jsonify(decoded_data[random.randint(0, len(decoded_data)-1)])
+
+
+@app.route('/cluster', methods=['POST'])
+def predict():
+  data = request.get_json()
+  new_data = pd.DataFrame(data)
+  accidentdata = pd.read_pickle('./accidentdata.pkl')
+  for unit in accidentdata['UNITNAME'].unique():
+    unit2 = re.sub(r'\W+', '_', unit)
+    exec(f"{unit2} = accidentdata[accidentdata['UNITNAME'] == '{unit}'].copy()")
+    exec(f"{unit2} = {unit2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
+  for district in accidentdata['DISTRICTNAME'].unique():
+    district2 = re.sub(r'\W+', '_', district)
+    exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
+    exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
   ans = fit_in_cluster(Bagalkot, new_data)
   return jsonify(ans)
 
