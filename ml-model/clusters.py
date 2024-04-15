@@ -6,6 +6,7 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import numpy as np
 from sklearn.metrics import silhouette_score
+import random
 
 def get_clusters(unit_or_dist_name):
 
@@ -63,7 +64,10 @@ def get_clusters(unit_or_dist_name):
           decoded_values.append(int(np.round(encoded_values[0])))
           for i, encoder in enumerate(encoders):
                 val = int(np.floor(encoded_values[i+1]))
-                decoded = encoder.inverse_transform([val])
+                try:
+                  decoded = encoder.inverse_transform([val])
+                except:
+                   decoded = encoder.inverse_transform([val-1])
                 decoded_values.append(decoded[0])
           decoded_data.append(decoded_values)
   return decoded_data, cluster_centroids_unscaled, encoders, scaler
@@ -89,7 +93,6 @@ def fit_in_cluster(unit_or_dist_name, new_data):
   return decoded_data[indx]
 
 if __name__ == "__main__":
-    
     accidentdata = pd.read_pickle('./accidentdata.pkl')
 
     for unit in accidentdata['UNITNAME'].unique():
@@ -102,10 +105,12 @@ if __name__ == "__main__":
         exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
         exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
 
-      
+    decoded_data, _, _, _ = get_clusters(Yadgiri_Traffic_Police_Station)
+    print(decoded_data[random.randint(0, len(decoded_data)-1)])
+
     new_data = pd.DataFrame({'Month': [8],
                          'Accident_Spot': ['Narrow road'],
                          'Accident_SubLocation': ['Near Hospital'],
                          'Road_Type': ['Forest Road']})
-    ans = fit_in_cluster(Bagalkot, new_data)
+    ans = fit_in_cluster(Yadgiri_Traffic_Police_Station, new_data)
     print(ans)
