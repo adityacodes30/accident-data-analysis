@@ -6,7 +6,7 @@ import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from '@mui/material';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import ChatBot from 'react-simple-chatbot';
+
 function Dashboard() {
   const [selectedNavItem, setSelectedNavItem] = useState("Dashboard");
 
@@ -140,9 +140,43 @@ function YearList() {
             {year}</div>
         </div>
       ))}
-        </div></div></div>
+        </div>
+        <LatLong/>
+        </div>
+        </div>
   );
 }
+
+function LatLong(){
+  const [resp, setResp] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(event.target.latitude.value);
+    const resp = await axios.post('http://localhost:9292/check_unsafe_road', {
+      latitude: event.target.latitude.value,
+      longitude: event.target.longitude.value,
+    });
+    setResp(resp.data.message);
+  }
+        
+        return (
+          <form onSubmit={handleSubmit}>
+            <label>
+              Latitude:
+              <input type="text" name="latitude" />
+            </label>
+            <label>
+              Longitude:
+              <input type="text" name="longitude" />
+            </label>
+
+            <input type="submit" value="Submit" />
+            <p>{resp}</p>
+          </form>
+        );
+}
+
 function IframeDisplay() {
   return (
     <div className="sub-container big">

@@ -100,6 +100,9 @@
   /* Set a fixed height */
   overflow-y: auto;
   /* Enable vertical scrolling */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .iframe-container{
   height: 100%;
