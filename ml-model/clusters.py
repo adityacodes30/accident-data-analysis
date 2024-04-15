@@ -6,6 +6,10 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import numpy as np
 from sklearn.metrics import silhouette_score
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
 
 def get_clusters(unit_or_dist_name):
 
@@ -88,24 +92,21 @@ def fit_in_cluster(unit_or_dist_name, new_data):
     i+=1
   return decoded_data[indx]
 
+@app.route('/predict', methods=['POST'])
+def predict():
+  data = request.get_json()
+  new_data = pd.DataFrame(data)
+  accidentdata = pd.read_pickle('./accidentdata.pkl')
+  for unit in accidentdata['UNITNAME'].unique():
+    unit2 = re.sub(r'\W+', '_', unit)
+    exec(f"{unit2} = accidentdata[accidentdata['UNITNAME'] == '{unit}'].copy()")
+    exec(f"{unit2} = {unit2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
+  for district in accidentdata['DISTRICTNAME'].unique():
+    district2 = re.sub(r'\W+', '_', district)
+    exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
+    exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
+  ans = fit_in_cluster(Bagalkot, new_data)
+  return jsonify(ans)
+
 if __name__ == "__main__":
-    
-    accidentdata = pd.read_pickle('./accidentdata.pkl')
-
-    for unit in accidentdata['UNITNAME'].unique():
-        unit2 = re.sub(r'\W+', '_', unit)
-        exec(f"{unit2} = accidentdata[accidentdata['UNITNAME'] == '{unit}'].copy()")
-        exec(f"{unit2} = {unit2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
-
-    for district in accidentdata['DISTRICTNAME'].unique():
-        district2 = re.sub(r'\W+', '_', district)
-        exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
-        exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
-
-      
-    new_data = pd.DataFrame({'Month': [8],
-                         'Accident_Spot': ['Narrow road'],
-                         'Accident_SubLocation': ['Near Hospital'],
-                         'Road_Type': ['Forest Road']})
-    ans = fit_in_cluster(Bagalkot, new_data)
-    print(ans)
+  app.run()
