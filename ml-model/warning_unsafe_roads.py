@@ -38,7 +38,7 @@ def check_unsafe_road():
             unsafe_roads.append(unsafe_road)
 
     if len(unsafe_roads) > 0:
-        return {'message': 'Warning: unsafe road(s) ahead', 'unsafe_roads': unsafe_roads}, 200
+        return {'message': ('Warning: unsafe road(s) ahead:\n\n', '\n'.join(unsafe_roads))}, 200
     else:
         return {'message': 'You are on a safe road!'}, 200
 

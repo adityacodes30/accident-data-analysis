@@ -162,6 +162,7 @@ function LatLong(){
         
         return (
           <form onSubmit={handleSubmit}>
+            <h3>Find nearest unsafe road</h3>
             <label>
               Latitude:
               <input type="text" name="latitude" />
