@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaHome, FaFileAlt, FaMap, FaComments, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
+import { FaHome, FaFileAlt, FaMap, FaSignOutAlt } from 'react-icons/fa'; // Importing icons
 import './Layout.css'; // Assuming you have a CSS file for styling
-import { ResponsiveContainer, AreaChart, PieChart, BarChart, Area, Pie, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, AreaChart, PieChart, BarChart, Area, Pie, Bar, XAxis, YAxis, Tooltip } from "recharts";
 import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/clerk-react';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Paper, Select, TextField } from '@mui/material';
 import axios from 'axios';
@@ -26,15 +26,6 @@ function Dashboard() {
   } else if (selectedNavItem === "Logout") {
     pageContent = <LogoutLogin />;
   }
-
-   
-const steps = [
-  {
-      id: '0',
-      message: 'Hey Geek!',
-      end: true
-  }
-];
 
   return (
     <div className="app">
