@@ -14,7 +14,7 @@ export default function DashboardLayout() {
       navigate("/sign-in")
     }
     
-  }, [])
+  })
  
   if (!isLoaded) return "Loading..."
  

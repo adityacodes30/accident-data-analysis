@@ -1,3 +1,4 @@
+import axios from 'axios';
 import express from "express";
 import * as dotenv from "dotenv"; //
 import cors from "cors";
@@ -6,13 +7,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-import fs from "fs";
-import csv from "csv-parser";
+// import fs from "fs";
+// import csv from "csv-parser";
 
 ///mongo connection
 
-import { MongoClient, ServerApiVersion } from "mongodb";
-import { log } from "console";
+// import { MongoClient, ServerApiVersion } from "mongodb";
+// import { log } from "console";
 import { kspDB } from "./db.js";
 
 const uri =
@@ -64,7 +65,6 @@ app.get("/ageRangeCount", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
-export default app;
 
 app.get("/accidentSpotCount", async (req, res) => {
   try {
@@ -136,6 +136,58 @@ app.get("/roadTypeCount", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
+
+app.get("/formdata", async function (req, res) {
+  console.log("on formdata route");
+  try {
+    const formdatacoll = kspDB.collection("form-data");
+    const result = await formdatacoll.find({}).toArray();
+    // console.log(result.toString());
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/form_sub", async function (req, res) {
+  console.log("on form_sub route");
+  try {
+    const formSubColl = kspDB.collection("form-sub");
+    const resp = await axios.post('http://localhost:5000/predict',{
+    //   'Month': [parseInt(req.body.form_values.month, 10)],
+    // 'Accident_Spot': [req.body.form_values.Accident_Spot],                       
+    // 'Accident_SubLocation': [req.body.form_values.Accident_SubLocation],
+    // 'Road_Type': [req.body.form_values.Road_Type],
+    'UNITNAME': [req.body.form_values.UNITNAME],
+  })
+    const recluster = await axios.post('http://localhost:5000/cluster',{
+      'Month': [parseInt(req.body.form_values.month, 10)],
+      'Accident_Spot': [req.body.form_values.Accident_Spot],                       
+      'Accident_SubLocation': [req.body.form_values.Accident_SubLocation],
+      'Road_Type': [req.body.form_values.Road_Type],
+      'UNITNAME': [req.body.form_values.UNITNAME],
+    })
+
+    const result = await formSubColl.insertOne(req.body);
+    res.status(200).json({"ml" : resp.data, "db":result});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.post("/check_unsafe_road", async (req,res)=>{
+  const resp = await axios.post('http://localhost:9292/check_unsafe_road', req.body);
+  res.json(resp.data);
+})
+
+app.post("/chatbot", async (req,res)=>{
+  const resp = await axios.post('http://localhost:8765/query', req.body);
+  res.json(resp.data);
+}
+)
+export default app;
 
 // app.get("/convertAge", async (req, res) => {
 //   try {

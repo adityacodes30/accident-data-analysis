@@ -27,6 +27,15 @@ function Dashboard() {
     pageContent = <LogoutLogin />;
   }
 
+   
+const steps = [
+  {
+      id: '0',
+      message: 'Hey Geek!',
+      end: true
+  }
+];
+
   return (
     <div className="app">
       <div className="centered-container">
@@ -37,7 +46,7 @@ function Dashboard() {
               <li className={selectedNavItem === "Dashboard" ? "selected" : ""} onClick={() => handleNavItemClick("Dashboard")}><FaHome /><span>Dashboard</span></li>
               <li className={selectedNavItem === "Form" ? "selected" : ""} onClick={() => handleNavItemClick("Form")}><FaFileAlt /><span>Form</span></li>
               <li className={selectedNavItem === "Map" ? "selected" : ""} onClick={() => handleNavItemClick("Map")}><FaMap /><span>Map</span></li>
-              <li className={selectedNavItem === "Chatbot" ? "selected" : ""} onClick={() => handleNavItemClick("Chatbot")}><FaComments /><span>Chatbot</span></li>
+              {/* <li className={selectedNavItem === "Chatbot" ? "selected" : ""} onClick={() => handleNavItemClick("Chatbot")}><FaComments /><span>Chatbot</span></li> */}
               <li className={selectedNavItem === "Logout" ? "selected" : ""} onClick={() => handleNavItemClick("Logout")}><FaSignOutAlt /><span>Logout</span></li>
             </ul>
           </nav>
@@ -49,9 +58,72 @@ function Dashboard() {
         {/* <IframeDisplay/> */}
         
       </div>
+      <Chatbot />
     </div>
   );
 }
+
+// import React, { useState } from 'react';
+// import './Chatbot.css';
+
+const Chatbot = () => {
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [chatbotVisible, setChatbotVisible] = useState(false);
+
+  const handleMessageSubmit = async (e) => {
+    e.preventDefault();
+    if (inputText.trim() === '') return;
+    const newMessage = {
+      text: inputText,
+      sender: 'user',
+    };
+    setMessages([...messages, newMessage]);
+    setInputText('');
+    // Here you can add your logic for processing the user input
+    const resp = await axios.post('http://localhost:5008/chatbot', {
+      message: inputText,
+    });
+    const botResponse = {
+      text: resp.data.result,
+      sender: 'bot',
+    };
+    setMessages([...messages, newMessage, botResponse]);
+    console.log(messages)
+  };
+  const handleChatButtonClick = () => {
+    setChatbotVisible(!chatbotVisible);
+  }
+  return (
+    <div className="chatbot-container">
+      {chatbotVisible && <div className="chatbot">
+        <div className="chatbot-messages">
+          {messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender}`}>
+              {message.text}
+            </div>
+          ))}
+        </div>
+        <form onSubmit={handleMessageSubmit} className="input-form">
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Type your message..."
+            className="input-field"
+          />
+          <button type="submit" className="send-button">
+            Send
+          </button>
+        </form>
+      </div>}
+      <div className="float-button" onClick={handleChatButtonClick}>chat</div>
+    </div>
+  );
+};
+
+
+
 function YearList() {
   const years = [2020, 2021, 2022, 2023, 2024]; // Sample list of years
   const [selectedYear, setSelectedYear] = useState(2022);
@@ -68,9 +140,44 @@ function YearList() {
             {year}</div>
         </div>
       ))}
-        </div></div></div>
+        </div>
+        <LatLong/>
+        </div>
+        </div>
   );
 }
+
+function LatLong(){
+  const [resp, setResp] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(event.target.latitude.value);
+    const resp = await axios.post('http://localhost:5008/check_unsafe_road', {
+      latitude: event.target.latitude.value,
+      longitude: event.target.longitude.value,
+    });
+    setResp(resp.data.message);
+  }
+        
+        return (
+          <form onSubmit={handleSubmit}>
+            <h3>Find nearest unsafe road</h3>
+            <label>
+              Latitude:
+              <input type="text" name="latitude" />
+            </label>
+            <label>
+              Longitude:
+              <input type="text" name="longitude" />
+            </label>
+
+            <input type="submit" value="Submit" />
+            <p>{resp}</p>
+          </form>
+        );
+}
+
 function IframeDisplay() {
   return (
     <div className="sub-container big">
@@ -96,80 +203,117 @@ function LogoutLogin() {
 
 // export default YearList;
 // import React from "react";
+
 function GraphDisplay() {
   // Sample data for demonstration
-  const data = [
-    { name: "Category 1", value: 400 },
-    { name: "Category 2", value: 300 },
-    { name: "Category 3", value: 300 },
-    { name: "Category 4", value: 200 },
-    { name: "Category 5", value: 100 }
+  const areaChartData = [
+    { name: "Narrow road", value: 138166 },
+    { name: "Curves", value: 66523 },
+    { name: "Cross roads", value: 61204 },
+    { name: "Junction", value: 36325 },
+    { name: "Circle", value: 26446 }
+  ];
+
+  const pieChartData1 = [
+    { name: "Open area", value: 252097 },
+    { name: "Village", value: 43909 },
+    { name: "Bus stop", value: 43368 },
+    { name: "Residential area", value: 43111 },
+    { name: "School or College", value: 19095 },
+    { name: "Petrol Pump", value: 16979 },
+    { name: "Office complex", value: 14468 },
+    { name: "Religious Place", value: 11801 },
+    { name: "Bridge", value: 9324 },
+    { name: "Hospital", value: 9275 }
+  ];
+
+  const pieChartData2 = [
+    { name: "Male", value: 372702 },
+    { name: "Female", value: 94125 },
+  ];
+  const pieChartData4 = [
+    { name: "Injured", value: 369315 },
+    { name: "Deceased", value: 73334 },
+  ];
+  const pieChartData3 = [
+    { name: "21-30", value: 122670 },
+    { name: "31-40", value: 96160 },
+    { name: "41-50", value: 70702 },
+    { name: "11-20", value: 53139 },
+    { name: "51-60", value: 46418 },
+    { name: "61-70", value: 21936 },
+    { name: "1-10", value: 16101 },
+    { name: "71-80", value: 5451 },
+  ];
+
+  const barChartData = [
+    { name: "National Highway", value: 197565 },
+    { name: "State Highway", value: 138295 },
+    { name: "Village Road", value: 35757 },
+    { name: "Town Road", value: 31816 },
+    { name: "Major District Road", value: 12039 },
+    { name: "Service Road", value: 8065 },
   ];
 
   return (
     <div className="sub-container bbig graph-display">
       <div className="graph-container">
-        <h3>Area Chart</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={data}>
-              <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-            </AreaChart>
-          </ResponsiveContainer>
+        <h3>Accident Spot</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <AreaChart data={areaChartData}>
+            <Area type="monotone" dataKey="value" stroke="#8884d8" fill="#8884d8" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
       <div className="graph-container pie">
-        <h3>Pie Chart</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-        
-      </div>
-      <div className="graph-container pie">
-        <h3>Pie Chart</h3>
+        <h3>Accident Sublocation</h3>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
-            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Pie data={pieChartData1} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
-
       </div>
       <div className="graph-container pie">
-        <h3>Pie Chart</h3>
+        <h3>Gender</h3>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
-            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Pie data={pieChartData2} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
-
       </div>
       <div className="graph-container pie">
-        <h3>Pie Chart</h3>
+        <h3>Age</h3>
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
-            <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Pie data={pieChartData3} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
-
+      </div>
+      <div className="graph-container pie">
+        <h3>Death toll</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie data={pieChartData4} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} fill="#8884d8" label />
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
       <div className="graph-container histo">
-        <h3>Bar Chart</h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={data}>
-              <Bar dataKey="value" fill="#8884d8" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-            </BarChart>
-          </ResponsiveContainer>
+        <h3>Road Type</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={barChartData}>
+            <Bar dataKey="value" fill="#8884d8" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
@@ -181,6 +325,20 @@ function FormPage() {
   const [formValues, setFormValues] = useState({"month": ""});
   const [formError, setFormError] = useState(false);
   const { isLoaded, user } = useUser();
+  const [resp, setResp] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:5008/formdata').then((response) => {
+        setformdata(response.data);
+        setFormValues(
+            Object.keys(response.data).filter(key => key !== "_id").reduce((obj, key) => ({ ...obj, [key]: '' }), {})
+        );
+        setloading(false);
+    }).catch((error) => {
+        console.error('Error fetching form data:', error);
+        setloading(false);
+    });
+}, []);
 
   if (!isLoaded) return null;
 
@@ -207,16 +365,18 @@ function FormPage() {
       if (isEmpty) {
           console.log('Form is empty');
           console.log(user.id);
-          // /there is a form_sub collection in the database put form values in that collection with user id and the time stamp
           setFormError(true);
       } else {
-          axios.post('http://localhost:5001/form_sub', {
+        console.log(formValues)
+          axios.post('http://localhost:5008/form_sub', {
               user_id: user.id,
               form_values: formValues,
               timestamp: new Date().toISOString()
           }).then((response) => {
+            setResp(response.data.ml + response.data.db)
               console.log('Form submitted successfully:', response);
           }).catch((error) => {
+            setResp(error.ml + error.db)
               console.error('Error submitting form:', error);
           });
           setFormError(false);
@@ -224,18 +384,7 @@ function FormPage() {
       }
   }
 
-  useEffect(() => {
-      axios.get('http://localhost:5001/formdata').then((response) => {
-          setformdata(response.data);
-          setFormValues(
-              Object.keys(response.data).filter(key => key !== "_id").reduce((obj, key) => ({ ...obj, [key]: '' }), {})
-          );
-          setloading(false);
-      }).catch((error) => {
-          console.error('Error fetching form data:', error);
-          setloading(false);
-      });
-  }, []);
+  
   
   if(loading) 
   {
@@ -243,8 +392,8 @@ function FormPage() {
   }
   
   return (
-      <>
-          <Paper>
+      <> 
+          <Paper className='sub-container bbig'>
               <h1>Form page</h1>
               <form onSubmit={handleSubmit}>
                   <Grid container spacing={2}>
@@ -290,6 +439,7 @@ function FormPage() {
                       Submit
                   </Button>
               </form>
+              {resp}
           </Paper>
       </>
   );
