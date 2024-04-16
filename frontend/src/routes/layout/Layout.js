@@ -46,7 +46,7 @@ const steps = [
               <li className={selectedNavItem === "Dashboard" ? "selected" : ""} onClick={() => handleNavItemClick("Dashboard")}><FaHome /><span>Dashboard</span></li>
               <li className={selectedNavItem === "Form" ? "selected" : ""} onClick={() => handleNavItemClick("Form")}><FaFileAlt /><span>Form</span></li>
               <li className={selectedNavItem === "Map" ? "selected" : ""} onClick={() => handleNavItemClick("Map")}><FaMap /><span>Map</span></li>
-              <li className={selectedNavItem === "Chatbot" ? "selected" : ""} onClick={() => handleNavItemClick("Chatbot")}><FaComments /><span>Chatbot</span></li>
+              {/* <li className={selectedNavItem === "Chatbot" ? "selected" : ""} onClick={() => handleNavItemClick("Chatbot")}><FaComments /><span>Chatbot</span></li> */}
               <li className={selectedNavItem === "Logout" ? "selected" : ""} onClick={() => handleNavItemClick("Logout")}><FaSignOutAlt /><span>Logout</span></li>
             </ul>
           </nav>
@@ -81,15 +81,15 @@ const Chatbot = () => {
     setMessages([...messages, newMessage]);
     setInputText('');
     // Here you can add your logic for processing the user input
-    const resp = await axios.post('http://localhost:8765/query', {
+    const resp = await axios.post('http://localhost:5001/chatbot', {
       message: inputText,
-      });
+    });
     const botResponse = {
       text: resp.data.result,
       sender: 'bot',
     };
-    setMessages([...messages, botResponse]);
-    
+    setMessages([...messages, newMessage, botResponse]);
+    console.log(messages)
   };
   const handleChatButtonClick = () => {
     setChatbotVisible(!chatbotVisible);
@@ -153,7 +153,7 @@ function LatLong(){
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(event.target.latitude.value);
-    const resp = await axios.post('http://localhost:9292/check_unsafe_road', {
+    const resp = await axios.post('http://localhost:5001/check_unsafe_road', {
       latitude: event.target.latitude.value,
       longitude: event.target.longitude.value,
     });

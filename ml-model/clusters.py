@@ -96,28 +96,28 @@ def fit_in_cluster(unit_or_dist_name, new_data):
     i+=1
   return decoded_data[indx]
 
-if __name__ == "__main__":
-    accidentdata = pd.read_pickle('./accidentdata.pkl')
+# if __name__ == "__main__":
+#     accidentdata = pd.read_pickle('./accidentdata.pkl')
 
-    for unit in accidentdata['UNITNAME'].unique():
-        unit2 = re.sub(r'\W+', '_', unit)
-        exec(f"{unit2} = accidentdata[accidentdata['UNITNAME'] == '{unit}'].copy()")
-        exec(f"{unit2} = {unit2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
+#     for unit in accidentdata['UNITNAME'].unique():
+#         unit2 = re.sub(r'\W+', '_', unit)
+#         exec(f"{unit2} = accidentdata[accidentdata['UNITNAME'] == '{unit}'].copy()")
+#         exec(f"{unit2} = {unit2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
 
-    for district in accidentdata['DISTRICTNAME'].unique():
-        district2 = re.sub(r'\W+', '_', district)
-        exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
-        exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
+#     for district in accidentdata['DISTRICTNAME'].unique():
+#         district2 = re.sub(r'\W+', '_', district)
+#         exec(f"{district2} = accidentdata[accidentdata['DISTRICTNAME'] == '{district}'].copy()")
+#         exec(f"{district2} = {district2}.drop(['DISTRICTNAME','UNITNAME', 'Severity', 'Road_Character', 'Year'], axis=1)")
 
-    decoded_data, _, _, _ = get_clusters(Yadgiri_Traffic_Police_Station)
-    print(decoded_data[random.randint(0, len(decoded_data)-1)])
+#     decoded_data, _, _, _ = get_clusters(Yadgiri_Traffic_Police_Station)
+#     print(decoded_data[random.randint(0, len(decoded_data)-1)])
 
-    new_data = pd.DataFrame({'Month': [8],
-                         'Accident_Spot': ['Narrow road'],
-                         'Accident_SubLocation': ['Near Hospital'],
-                         'Road_Type': ['Forest Road']})
-    ans = fit_in_cluster(Yadgiri_Traffic_Police_Station, new_data)
-    print(ans)
+#     new_data = pd.DataFrame({'Month': [8],
+#                          'Accident_Spot': ['Narrow road'],
+#                          'Accident_SubLocation': ['Near Hospital'],
+#                          'Road_Type': ['Forest Road']})
+#     ans = fit_in_cluster(Yadgiri_Traffic_Police_Station, new_data)
+#     print(ans)
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -137,7 +137,7 @@ def predict():
 
 
 @app.route('/cluster', methods=['POST'])
-def predict():
+def cluster():
   data = request.get_json()
   new_data = pd.DataFrame(data)
   accidentdata = pd.read_pickle('./accidentdata.pkl')

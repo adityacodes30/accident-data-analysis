@@ -1,3 +1,4 @@
+import axios from 'axios';
 import express from "express";
 import * as dotenv from "dotenv"; //
 import cors from "cors";
@@ -158,4 +159,14 @@ app.post("/form_sub", async function (req, res) {
   }
 });
 
+app.post("/check_unsafe_road", async (req,res)=>{
+  const resp = await axios.post('http://localhost:9292/check_unsafe_road', req.body);
+  res.json(resp.data);
+})
+
+app.post("/chatbot", async (req,res)=>{
+  const resp = await axios.post('http://localhost:8765/query', req.body);
+  res.json(resp.data);
+}
+)
 export default app;
