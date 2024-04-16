@@ -14,10 +14,11 @@ import csv from "csv-parser";
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { log } from "console";
 import { kspDB } from "./db.js";
+
 const uri =
   "mongodb+srv://adityaework:t9oA9XrMtGHrZcQI@cluster0.me5pggj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-// const coll = kspDB.collection("data");
+const coll = kspDB.collection("data");
 
 app.get("/", (req, res) => {
   console.log("get req");
@@ -50,6 +51,7 @@ app.get("/count", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
+
 
 app.get("/ageRangeCount", async (req, res) => {
   try {
@@ -134,3 +136,21 @@ app.get("/roadTypeCount", async (req, res) => {
     res.status(500).json({ message: "An error occurred" });
   }
 });
+
+// app.get("/convertAge", async (req, res) => {
+//   try {
+//     const cursor = coll.find();
+//     while(await cursor.hasNext()) {
+//       const doc = await cursor.next();
+//       const age = parseInt(doc.age, 10);
+//       if (!isNaN(age)) {
+//         await coll.updateOne({ _id: doc._id }, { $set: { age: age } });
+//       }
+//     }
+//     res.status(200).json({ message: "Age conversion completed" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "An error occurred" });
+//   }
+// });
+
