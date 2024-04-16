@@ -156,8 +156,16 @@ app.post("/form_sub", async function (req, res) {
     // 'Accident_Spot': [req.body.form_values.Accident_Spot],                       
     // 'Accident_SubLocation': [req.body.form_values.Accident_SubLocation],
     // 'Road_Type': [req.body.form_values.Road_Type],
-    'DISTRICTNAME': [req.body.form_values.districtname],
+    'UNITNAME': [req.body.form_values.UNITNAME],
   })
+    const recluster = await axios.post('http://localhost:5000/cluster',{
+      'Month': [parseInt(req.body.form_values.month, 10)],
+      'Accident_Spot': [req.body.form_values.Accident_Spot],                       
+      'Accident_SubLocation': [req.body.form_values.Accident_SubLocation],
+      'Road_Type': [req.body.form_values.Road_Type],
+      'UNITNAME': [req.body.form_values.UNITNAME],
+    })
+
     const result = await formSubColl.insertOne(req.body);
     res.status(200).json({"ml" : resp.data, "db":result});
   } catch (err) {
