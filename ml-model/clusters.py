@@ -139,6 +139,7 @@ def predict():
 @app.route('/cluster', methods=['POST'])
 def cluster():
   data = request.get_json()
+  print(data)
   new_data = pd.DataFrame(data)
   accidentdata = pd.read_pickle('./accidentdata.pkl')
   for unit in accidentdata['UNITNAME'].unique():

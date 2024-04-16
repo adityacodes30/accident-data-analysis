@@ -81,7 +81,7 @@ const Chatbot = () => {
     setMessages([...messages, newMessage]);
     setInputText('');
     // Here you can add your logic for processing the user input
-    const resp = await axios.post('http://localhost:5001/chatbot', {
+    const resp = await axios.post('http://localhost:5008/chatbot', {
       message: inputText,
     });
     const botResponse = {
@@ -153,7 +153,7 @@ function LatLong(){
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(event.target.latitude.value);
-    const resp = await axios.post('http://localhost:5001/check_unsafe_road', {
+    const resp = await axios.post('http://localhost:5008/check_unsafe_road', {
       latitude: event.target.latitude.value,
       longitude: event.target.longitude.value,
     });
@@ -324,9 +324,10 @@ function FormPage() {
   const [formValues, setFormValues] = useState({"month": ""});
   const [formError, setFormError] = useState(false);
   const { isLoaded, user } = useUser();
+  const [resp, setResp] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5001/formdata').then((response) => {
+    axios.get('http://localhost:5008/formdata').then((response) => {
         setformdata(response.data);
         setFormValues(
             Object.keys(response.data).filter(key => key !== "_id").reduce((obj, key) => ({ ...obj, [key]: '' }), {})
@@ -363,16 +364,18 @@ function FormPage() {
       if (isEmpty) {
           console.log('Form is empty');
           console.log(user.id);
-          // /there is a form_sub collection in the database put form values in that collection with user id and the time stamp
           setFormError(true);
       } else {
-          axios.post('http://localhost:5001/form_sub', {
+        console.log(formValues)
+          axios.post('http://localhost:5008/form_sub', {
               user_id: user.id,
               form_values: formValues,
               timestamp: new Date().toISOString()
           }).then((response) => {
+            setResp(response.ml + response.db)
               console.log('Form submitted successfully:', response);
           }).catch((error) => {
+            setResp(response.ml + response.db)
               console.error('Error submitting form:', error);
           });
           setFormError(false);
@@ -435,6 +438,7 @@ function FormPage() {
                       Submit
                   </Button>
               </form>
+              {resp}
           </Paper>
       </>
   );

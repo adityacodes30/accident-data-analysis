@@ -1,0 +1,9 @@
+services:
+  main_api:
+    build: .
+    ports:
+      - "5008:5008"
+    volumes:
+      - .:/app
+    #   - ./backend/node_modules:/app/node_modules
+    
