@@ -372,10 +372,10 @@ function FormPage() {
               form_values: formValues,
               timestamp: new Date().toISOString()
           }).then((response) => {
-            setResp(response.ml + response.db)
+            setResp(response.data.ml + response.data.db)
               console.log('Form submitted successfully:', response);
           }).catch((error) => {
-            setResp(response.ml + response.db)
+            setResp(error.ml + error.db)
               console.error('Error submitting form:', error);
           });
           setFormError(false);
