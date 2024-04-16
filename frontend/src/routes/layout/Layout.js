@@ -72,7 +72,7 @@ const Chatbot = () => {
     setMessages([...messages, newMessage]);
     setInputText('');
     // Here you can add your logic for processing the user input
-    const resp = await axios.post('http://localhost:5008/chatbot', {
+    const resp = await axios.post('https://kspbackend.mankiratsingh.tech/chatbot', {
       message: inputText,
     });
     const botResponse = {
@@ -144,7 +144,7 @@ function LatLong(){
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log(event.target.latitude.value);
-    const resp = await axios.post('http://localhost:5008/check_unsafe_road', {
+    const resp = await axios.post('https://kspbackend.mankiratsingh.tech/check_unsafe_road', {
       latitude: event.target.latitude.value,
       longitude: event.target.longitude.value,
     });
@@ -319,7 +319,7 @@ function FormPage() {
   const [resp, setResp] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5008/formdata').then((response) => {
+    axios.get('https://kspbackend.mankiratsingh.tech/formdata').then((response) => {
         setformdata(response.data);
         setFormValues(
             Object.keys(response.data).filter(key => key !== "_id").reduce((obj, key) => ({ ...obj, [key]: '' }), {})
@@ -359,7 +359,7 @@ function FormPage() {
           setFormError(true);
       } else {
         console.log(formValues)
-          axios.post('http://localhost:5008/form_sub', {
+          axios.post('https://kspbackend.mankiratsingh.tech/form_sub', {
               user_id: user.id,
               form_values: formValues,
               timestamp: new Date().toISOString()
