@@ -159,14 +159,14 @@ app.post("/form_sub", async function (req, res) {
     // 'Accident_Spot': [req.body.form_values.Accident_Spot],                       
     // 'Accident_SubLocation': [req.body.form_values.Accident_SubLocation],
     // 'Road_Type': [req.body.form_values.Road_Type],
-    'UNITNAME': [req.body.form_values.UNITNAME],
+    'UNITNAME': [req.body.form_values.unitName],
   })
     const recluster = await axios.post('http://localhost:5000/cluster',{
       'Month': [parseInt(req.body.form_values.month, 10)],
       'Accident_Spot': [req.body.form_values.Accident_Spot],                       
       'Accident_SubLocation': [req.body.form_values.Accident_SubLocation],
       'Road_Type': [req.body.form_values.Road_Type],
-      'UNITNAME': [req.body.form_values.UNITNAME],
+      'UNITNAME':[req.body.form_values.unitName],
     })
 
     const result = await formSubColl.insertOne(req.body);
